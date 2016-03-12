@@ -309,13 +309,13 @@ class AuthorizeNet::Api
       @logger.info("[AuthorizeNet] Responded with resultCode=\"#{response.result}\"")
     end
 
-    if !response.messages.nil? and @logger.respond_to? :info
+    if !response.messages.nil? and @logger.respond_to?(:info)
       response.messages.each do |msg|
         @logger.info("[AuthorizeNet] Message code=\"#{msg[:code]}\" text=\"#{msg[:text]}\"")
       end
     end
 
-    if !response.errors.nil? and @logger.respond_to? :error
+    if !response.errors.nil? and @logger.respond_to?(:error)
       response.errors.each do |error|
         @logger.error("[AuthorizeNet] Error code=\"#{error[:code]}\" text=\"#{error[:text]}\"")
       end

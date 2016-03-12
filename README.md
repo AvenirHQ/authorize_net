@@ -137,7 +137,3 @@ To send custom requests you can use the AuthorizeNet::Request class.
 ### AuthorizeNet::Request
 Coming Soon
 
-
-
-## Development
-run `./build_install` from the root to build the gem and install it on your computer.  Once you've done that, it should be require-able everywhere with `require 'authorize-net'`

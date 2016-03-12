@@ -1,0 +1,3 @@
+credentials.yml
+*.gem
+test_script.rb

@@ -22,9 +22,15 @@ module AuthorizeNet
 end
 
 # require all authorize-net files
-Dir['lib/authorize_net/**/*.rb'].each do |filename|
-  match = filename.match(/lib\/(authorize_net\/.*).rb/)
-  if !match.nil?
-    require match[1]
+current_dir = __FILE__.match(/(.*)\/authorize_net.rb/)
+if !current_dir.nil?
+  authorize_dir = current_dir[1] + "/authorize_net/**/*.rb"
+
+  Dir[authorize_dir].each do |filename|
+    require filename
   end
+
+else
+  raise "Error loading authorize_net files"
 end
+

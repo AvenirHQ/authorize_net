@@ -39,7 +39,11 @@ class AuthorizeNet::Transaction < AuthorizeNet::DataObject
   def parse(xml)
     super
 
-    @customer_profile.merchant_id = AuthorizeNet::Util.getXmlValue(xml, 'customer id')
+    merchant_id = AuthorizeNet::Util.getXmlValue(xml, 'customer id')
+    if !merchant_id.nil?
+      @customer_profile ||= AuthorizeNet::CustomerProfile.new
+      @customer_profile.merchant_id = merchant_id
+    end
   end
 
 end

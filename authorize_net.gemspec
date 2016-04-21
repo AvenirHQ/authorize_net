@@ -1,7 +1,7 @@
 Gem::Specification.new do |spec|
   spec.name = 'authorize_net'
-  spec.version = '0.0.3'
-  spec.date = '2016-03-11'
+  spec.version = '0.1.0'
+  spec.date = '2016-04-21'
   spec.summary = 'API interface for Authorize.net payment gateway'
   spec.description = 'A RubyGem that interfaces with the Authorize.net payment gateway'
   spec.authors = ['Avenir Interactive LLC']

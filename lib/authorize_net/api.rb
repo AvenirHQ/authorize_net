@@ -1,4 +1,5 @@
 require 'nokogiri'
+require 'openssl'
 
 # ===============================================================
 # This class uses the AuthroizeRequest object to interact with
@@ -8,10 +9,11 @@ require 'nokogiri'
 # ===============================================================
 class AuthorizeNet::Api
 
-  def initialize(api_login_id, api_transaction_key, is_test_api)
+  def initialize(api_login_id, api_transaction_key, options={})
     @api_login_id = api_login_id
     @api_transaction_key = api_transaction_key
-    @is_test_api = is_test_api
+    @is_sandbox = options[:sandbox]
+    @md5_hash = options[:md5_hash]
     @logger = nil
     @log_full_request = false
   end
@@ -45,6 +47,7 @@ class AuthorizeNet::Api
     end
 
     response = sendRequest("createTransactionRequest", xml_obj)
+    validate_hash(response, amount, use_api_login: true)
     if !response.nil?
       return AuthorizeNet::Transaction.parse(response)
     end
@@ -82,7 +85,7 @@ class AuthorizeNet::Api
     }
 
     response = sendRequest("createTransactionRequest", xml_obj)
-
+    validate_hash(response, amount, use_api_login: true)
     if !response.nil?
       return {
         :transaction => AuthorizeNet::Transaction.parse(response),
@@ -115,6 +118,7 @@ class AuthorizeNet::Api
     }
 
     response = sendRequest("createTransactionRequest", xml_obj)
+    validate_hash(response, amount, use_api_login: false)
     if !response.nil?
       return AuthorizeNet::Transaction.parse(response)
     end
@@ -271,12 +275,45 @@ class AuthorizeNet::Api
   end
 
   # =============================================
+  # Validates that the returned transaction hash
+  # value is what we expect it to be
+  #
+  # @throws AuthorizeNet::Exception
+  # =============================================
+  def validate_hash(response_xml, amount, options={})
+    if @md5_hash.nil?
+      return
+    end
+
+    digest = OpenSSL::Digest.new('md5')
+    transaction_id = AuthorizeNet::Util.getXmlValue(response_xml, "transId")
+    trans_hash = AuthorizeNet::Util.getXmlValue(response_xml, "transHash").downcase
+    formatted_amount = "%.2f" % amount
+
+    if options[:use_api_login]
+      calculated_hash = digest.hexdigest("#{@md5_hash}#{@api_login_id}#{transaction_id}#{formatted_amount}")
+    else
+      calculated_hash = digest.hexdigest("#{@md5_hash}#{transaction_id}#{formatted_amount}")
+    end
+
+    if calculated_hash != trans_hash
+      if @logger.respond_to? :error
+        @logger.error("[AuthorizeNet] Response Transaction Hash doesn't equal expected value. trans_hash=#{trans_hash} calculated_hash=#{calculated_hash}")
+      end
+
+      e = AuthorizeNet::Exception.new("[AuthorizeNet] Returned hash doesn't match expected value.")
+      e.errors.push({:text => "Something went wrong. Please contact customer assistance or try again later"})
+      raise e
+    end
+  end
+
+  # =============================================
   # Send HTTP request to Authorize Net
   # @param Net::HTTPResponse
   # @return response
   # =============================================
   def sendRequest(type, xml_obj)
-    uri = @is_test_api ? AuthorizeNet::TEST_URI : AuthorizeNet::URI
+    uri = @is_sandbox ? AuthorizeNet::TEST_URI : AuthorizeNet::URI
     request = AuthorizeNet::Request.new(type, xml_obj, uri)
 
     if @logger.respond_to? :info

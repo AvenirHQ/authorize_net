@@ -80,8 +80,8 @@ class AuthorizeNet::Api
         "id" => customer_profile.merchant_id,
         "email" => customer_profile.email,
         "description" => customer_profile.description,
-        "billTo" => payment_profile.billing_address.to_h,
       },
+      "billTo" => payment_profile.billing_address.to_h,
     }
 
     response = sendRequest("createTransactionRequest", xml_obj)

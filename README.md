@@ -6,7 +6,7 @@ Check out `examples.rb` for some quick examples.
 ## Interface
 ### AuthorizeNet::Api
 To start, you'll want an `AuthorizeNet::Api` object.  The constructor takes your api authorization info.
-`api = AuthorizeNet::Api.new(api_login_id, api_transaction_key, is_test_api)`
+`api = AuthorizeNet::Api.new(api_login_id, api_transaction_key, options)`.  Options may contain `:sandbox` which should be true for all sandbox requests, and `:md5_hash` which holds the optional md5_hash value that you can give to AuthorizeNet to validate transactions.
 
 Then you can start using the below methods to interact with Authorize.net
 

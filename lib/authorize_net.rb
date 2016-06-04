@@ -1,5 +1,5 @@
 module AuthorizeNet
-  URI = "https://api.authorize.net/xml/v1/request.api"
+  URI = "https://api2.authorize.net/xml/v1/request.api"
   TEST_URI = "https://apitest.authorize.net/xml/v1/request.api"
   XML_SCHEMA = "AnetApi/xml/v1/schema/AnetApiSchema.xsd"
   XML_HEADER = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"

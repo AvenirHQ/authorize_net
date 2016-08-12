@@ -1,5 +1,22 @@
 #AuthorizeNet
 
+## Getting started
+
+If you're going to be doing a lot of Authorize.net work, it's recommended that you make your own sandbox account.  You can register for one [here](https://developer.authorize.net/hello_world/sandbox/).  Then you can log in at [sandbox.authorize.net](https://sandbox.authorize.net).
+
+> **NOTE:** Right when you make your account, the response page will have your API Login ID and API Transaction Key.  Save these values, because they are hard to get back if you don't save them the first time around.
+
+Other things to know:
+
+- DPM = Direct Post Method, this is using an html form to submit directly from the client to AuthorizeNet
+- SIM = Server Integration Method, this is basically just a server sending CC info to their API directly
+- CIM = Customer Information Manager, this isn't even an integration method.  This just refers to saving customer payment info on AuthorizeNet servers.
+- Our v2 RRG API is going to use SIM and CIM.
+- You can whitelist URLs for DPM in the AuthorizeNet settings.  Under **Transaction Format Settings**, click **Response/Receipt URLs**.
+- It seems that most of the settings around DPM exist in the **Transaction Format Settings** and generally don't apply to us.
+- In the AuthorizeNet settings, **MD5-Hash** is actually just a secret string that gets appended to transaction information before it gets hashed.  That hash can then be used to verify the authenticity of the AuthorizeNet server.
+- There are also **Address Verification** and **Card Code Verification** in the **Security Settings** that will probably be helpful.
+
 ## Examples
 Check out `examples.rb` for some quick examples.
 

@@ -9,11 +9,11 @@ require 'openssl'
 # ===============================================================
 class AuthorizeNet::Api
 
-  def initialize(api_login_id, api_transaction_key, options={})
+  def initialize(api_login_id, api_transaction_key, **options)
     @api_login_id = api_login_id
     @api_transaction_key = api_transaction_key
     @is_sandbox = options[:sandbox]
-    @md5_hash = options[:md5_hash]
+    @signature_key = options[:signature_key]
     @logger = nil
     @log_full_request = false
   end
@@ -47,7 +47,7 @@ class AuthorizeNet::Api
     end
 
     response = sendRequest("createTransactionRequest", xml_obj)
-    validate_hash(response, amount, use_api_login: true)
+    validate_hash(response, amount)
     if !response.nil?
       return AuthorizeNet::Transaction.parse(response)
     end
@@ -85,7 +85,7 @@ class AuthorizeNet::Api
     }
 
     response = sendRequest("createTransactionRequest", xml_obj)
-    validate_hash(response, amount, use_api_login: true)
+    validate_hash(response, amount)
     if !response.nil?
       return {
         :transaction => AuthorizeNet::Transaction.parse(response),
@@ -118,7 +118,7 @@ class AuthorizeNet::Api
     }
 
     response = sendRequest("createTransactionRequest", xml_obj)
-    validate_hash(response, amount, use_api_login: false)
+    validate_hash(response, amount)
     if !response.nil?
       return AuthorizeNet::Transaction.parse(response)
     end
@@ -280,21 +280,17 @@ class AuthorizeNet::Api
   #
   # @throws AuthorizeNet::Exception
   # =============================================
-  def validate_hash(response_xml, amount, options={})
-    if @md5_hash.nil?
+  def validate_hash(response_xml, amount)
+    if @signature_key.nil?
       return
     end
 
-    digest = OpenSSL::Digest.new('md5')
-    transaction_id = AuthorizeNet::Util.getXmlValue(response_xml, "transId")
-    trans_hash = AuthorizeNet::Util.getXmlValue(response_xml, "transHash").downcase
     formatted_amount = "%.2f" % amount
+    transaction_id = AuthorizeNet::Util.getXmlValue(response_xml, "transId")
+    hash_text = "^#{@api_login_id}^#{transaction_id}^#{formatted_amount}^"
 
-    if options[:use_api_login]
-      calculated_hash = digest.hexdigest("#{@md5_hash}#{@api_login_id}#{transaction_id}#{formatted_amount}")
-    else
-      calculated_hash = digest.hexdigest("#{@md5_hash}#{transaction_id}#{formatted_amount}")
-    end
+    calculated_hash = OpenSSL::HMAC.hexdigest('sha512', [@signature_key].pack('H*'), hash_text).downcase
+    trans_hash = AuthorizeNet::Util.getXmlValue(response_xml, "transHashSha2").downcase
 
     if calculated_hash != trans_hash
       if @logger.respond_to? :error

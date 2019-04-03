@@ -12,17 +12,17 @@ class TestUtil < Minitest::Test
 
   def test_get_xml_missing_key
     xml = Nokogiri::XML.parse("<randomness>junkjunkjunk</randomness>")
-    assert_equal(nil, AuthorizeNet::Util.getXmlValue(xml, "order"))
-    assert_equal(nil, AuthorizeNet::Util.getXmlValue(xml, "peace"))
-    assert_equal(nil, AuthorizeNet::Util.getXmlValue(xml, 100))
-    assert_equal(nil, AuthorizeNet::Util.getXmlValue(xml, {:some_hash => "things"}))
+    assert_nil(AuthorizeNet::Util.getXmlValue(xml, "order"))
+    assert_nil(AuthorizeNet::Util.getXmlValue(xml, "peace"))
+    assert_nil(AuthorizeNet::Util.getXmlValue(xml, 100))
+    assert_nil(AuthorizeNet::Util.getXmlValue(xml, {:some_hash => "things"}))
   end
 
   def test_get_xml_non_xml
-    assert_equal(nil, AuthorizeNet::Util.getXmlValue("blankness", "something"))
-    assert_equal(nil, AuthorizeNet::Util.getXmlValue(nil, "anything"))
-    assert_equal(nil, AuthorizeNet::Util.getXmlValue(1984, "nothing"))
-    assert_equal(nil, AuthorizeNet::Util.getXmlValue({:some_hash => true}, "everything"))
+    assert_nil(AuthorizeNet::Util.getXmlValue("blankness", "something"))
+    assert_nil(AuthorizeNet::Util.getXmlValue(nil, "anything"))
+    assert_nil(AuthorizeNet::Util.getXmlValue(1984, "nothing"))
+    assert_nil(AuthorizeNet::Util.getXmlValue({:some_hash => true}, "everything"))
   end
 
   def test_get_xml_multiple

@@ -12,6 +12,7 @@ Gem::Specification.new do |spec|
   spec.require_path = 'lib'
   spec.files = Dir["lib/**/*.rb"]
 
-  spec.add_runtime_dependency 'nokogiri', '= 1.6.7.2', '>= 1.6.7.2'
+  spec.required_ruby_version = '>= 2.3.0'
+  spec.add_runtime_dependency 'nokogiri', '~> 1.10', '>= 1.10.2'
 
 end

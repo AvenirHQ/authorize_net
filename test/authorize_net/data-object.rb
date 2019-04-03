@@ -65,11 +65,11 @@ class TestUtil < Minitest::Test
 
     assert_equal('2', circle1.x)
     assert_equal('4', circle1.y)
-    assert_equal(nil, circle1.radius)
-    assert_equal(nil, circle1.color)
+    assert_nil(circle1.radius)
+    assert_nil(circle1.color)
 
-    assert_equal(nil, circle2.x)
-    assert_equal(nil, circle2.y)
+    assert_nil(circle2.x)
+    assert_nil(circle2.y)
     assert_equal('10', circle2.radius)
     assert_equal('blue', circle2.color)
 
@@ -92,20 +92,20 @@ class TestUtil < Minitest::Test
     test = TestObject.parse(xml)
 
     assert_equal(x.to_s, test.x)
-    assert_equal(nil, test.y)
-    assert_equal(nil, test.radius)
+    assert_nil(test.y)
+    assert_nil(test.radius)
     assert_equal(color, test.color)
   end
 
   def test_parse_bad_xml
     test = TestObject.parse("nothing here")
-    assert_equal(nil, test)
+    assert_nil(test)
 
     test = TestObject.parse({:still => "junk"})
-    assert_equal(nil, test)
+    assert_nil(test)
 
     test= TestObject.parse(1394083120598)
-    assert_equal(nil, test)
+    assert_nil(test)
   end
 
   def test_to_h
@@ -127,9 +127,9 @@ class TestUtil < Minitest::Test
 
     hash2 = test2.to_h
     assert_equal(test2.x, hash2["xVal"])
-    assert_equal(nil, hash2["yVal"])
+    assert_nil(hash2["yVal"])
     assert_equal(test2.color, hash2["color"])
-    assert_equal(nil, hash2["radius"])
+    assert_nil(hash2["radius"])
   end
 
   def test_serialize
@@ -161,8 +161,8 @@ class TestUtil < Minitest::Test
     h_mid = hash[:middle_circle]
     assert_equal(100, h_mid[:x])
     assert_equal(200, h_mid[:y])
-    assert_equal(nil, h_mid[:radius])
-    assert_equal(nil, h_mid[:color])
+    assert_nil(h_mid[:radius])
+    assert_nil(h_mid[:color])
 
     h_c1 = hash[:circles][0]
     assert_equal(1, h_c1[:x])

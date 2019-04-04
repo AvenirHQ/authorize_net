@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name = 'authorize_net'
-  spec.version = '0.1.2'
+  spec.version = '1.0.0'
   spec.date = '2016-06-04'
   spec.summary = 'API interface for Authorize.net payment gateway'
   spec.description = 'A RubyGem that interfaces with the Authorize.net payment gateway'
@@ -12,6 +12,7 @@ Gem::Specification.new do |spec|
   spec.require_path = 'lib'
   spec.files = Dir["lib/**/*.rb"]
 
-  spec.add_runtime_dependency 'nokogiri', '= 1.6.7.2', '>= 1.6.7.2'
+  spec.required_ruby_version = '>= 2.3.0'
+  spec.add_runtime_dependency 'nokogiri', '~> 1.10', '>= 1.10.2'
 
 end
